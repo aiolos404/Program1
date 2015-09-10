@@ -2,27 +2,26 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_LINE 1024
 
-
-void readContentofFile(char *s)
+void getContentofFile(char *source, char *destination)
 {
-    char buf[MAX_LINE];  //define the buffer area
-    FILE *f;            //set the pointer of file
-    int length;             //count the number of char per line
-    //check if the file exists
-    if((f = fopen(s,"r")) == NULL)
-    {
-        printf("no such file");
-        exit (1) ;
+    FILE *f1,*f2;
+    char buffer;
+    //Check if source f1 is readable
+    if((f1=fopen(source,"rt"))==NULL){
+        printf("Cannot READ %s\n",source);
+        exit(1);
     }
-    //print the content on the screen 
-    while(fgets(buf,MAX_LINE,f) != NULL)
-    {
-        length = strlen(buf);
-        buf[length-1] = '\0';  //remove '\0' tag
-        printf("%s \n",buf);
+    //Check if destination f2 is writeable
+    if((f2=fopen(destination,"wt+"))==NULL){
+        printf("Cannot WRITE %s\n",destination);
+        exit(1);
     }
+    //Read from source f1 to destination f2
+    while((buffer=fgetc(f1))!=EOF)
+        fputc(buffer,f2);
+    fclose(f1);
+    fclose(f2);
 }
 
 
@@ -40,9 +39,7 @@ int main(int argc, char *argv[])
         exit (1) ;
     } 
     printf("\n");
-    readContentofFile(argv[1]);
+    getContentofFile(argv[1],argv[2]);
     return 0;
 } 
-
-
 
